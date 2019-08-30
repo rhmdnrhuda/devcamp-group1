@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title horizontal="center">
+      <b>Wallet Bot</b>
+    </ion-title>
+    <ion-button vertical="center" float-right [routerLink]="['/riwayat']">
+      <ion-icon name="stats"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+    <ion-grid (change)="scrollBottom()">
+      <app-chat-content *ngFor="let chat of chats"
+      name="{{chat.name}}" 
+      message="{{chat.message}}" 
+      imageUrl="{{chat.imageUrl}}">
+      </app-chat-content>
+    </ion-grid>
+</ion-content>
+
+<app-input-field
+(addChat)="addChat($event)" ></app-input-field>

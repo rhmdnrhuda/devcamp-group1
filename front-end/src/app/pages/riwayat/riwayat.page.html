@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar class="nav-bar" color="#8FB77F">
+      <ion-button style="background-color: #236855" float-left [routerLink]="['']">
+          <ion-icon class="colors" name="arrow-back" color="light"></ion-icon>
+        </ion-button>
+    <ion-title class="title">Riwayat Traksaksi</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="balance">
+    <ion-item>
+      <ion-label>Saldo Sekarang </ion-label>
+      <ion-label *ngIf="chatbotService.balance"> {{chatbotService.balance | currency: 'Rp'}}</ion-label>
+    </ion-item>
+  </ion-card>
+  <ion-card class="range-time">
+    <ion-item>
+        <ion-label>Dari</ion-label>
+      <ion-item>
+        <ion-datetime  placeholder="Select Date" [(ngModel)]="startDate">
+        </ion-datetime>
+        
+      </ion-item>
+    </ion-item>
+    <ion-item>
+        <ion-label>Sampai</ion-label>
+      <ion-item>
+        <ion-datetime  placeholder="Select Date" [(ngModel)]="endDate"></ion-datetime>
+      </ion-item>
+    </ion-item>
+  </ion-card>
+  <div *ngIf="startDate && endDate">
+      {{chatbotService.getTransaction(setFormatDate(startDate),setFormatDate(endDate))}}
+  </div>
+  <div *ngIf="chatbotService.transactions">
+      
+      <ion-card *ngFor="let item of chatbotService.transactions">
+          <ion-item class="session-header">
+            <ion-label>
+                {{item.tanggal}}
+            </ion-label>
+            <ion-label class="total">{{item.total | currency: 'Rp'}}</ion-label>
+          </ion-item>
+          <div *ngFor="let data of item.data">
+              <ion-item >
+                {{data.Timestamp}}
+                <ion-label class="category"> 
+                  {{data.Category}}
+                  <ion-label class="note">
+                    {{data.Note}}
+                  </ion-label>
+                </ion-label>
+                <ion-label *ngIf="data.Type === 'Expense'" class="amount-expense">-{{data.Amount | currency: 'Rp'}}</ion-label>
+                <ion-label *ngIf="data.Type === 'Income'" class="amount-income">+{{data.Amount | currency: 'Rp'}}</ion-label>      
+              </ion-item>
+          </div>
+        </ion-card>
+  </div>
+</ion-content>
