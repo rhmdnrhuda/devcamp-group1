@@ -51,26 +51,37 @@ public class DialogFlowHTTPS {
     }
     
     private void processInsert(HashMap<String, JsonElement> params) {
+        System.out.println(params.toString());
         if (params.size() < 1) {return;}    // should have at least 1 params
         
-        String recordKeys = "";     // for insert 
-        String recordValues = "";   // for insert
-        String recordPairs = "";    // for update
+        String recordKeys = "userid,";     // for insert 
+        String recordValues = "\""+this.sessionId+"\",";   // for insert
         
         for (Map.Entry<String, JsonElement> entry : params.entrySet()) {
+            
             String key = entry.getKey();
             String val = entry.getValue().getAsString();
             
             recordKeys += key + ",";
-            recordValues += "\"" + val + "\",";
-            recordPairs += key + "=\"" + val + "\",";
+            if (key.equals("Timestamp")) {
+                
+                if (val.contains("T")) {
+                    String newVal = val.substring(0, 19).replaceAll("T", " ");
+                    recordValues += "\"" + newVal + "\",";
+                } else {
+                    recordValues += "NOW(),";
+                }
+                
+            } else {
+                recordValues += "\"" + val + "\",";
+            }
+            
         }
         recordKeys = trimSuffix(recordKeys);
         recordValues = trimSuffix(recordValues);
-        recordPairs = trimSuffix(recordPairs);
         
         Database db = new Database();
-        String query = db.createQuery(recordKeys, recordValues, recordPairs);
+        String query = db.createQuery(recordKeys, recordValues);
         db.executeUpdate(query);
     }
     
@@ -105,9 +116,8 @@ public class DialogFlowHTTPS {
                 JsonParser parser = new JsonParser();
                 JsonObject jsonMessage = (JsonObject) parser.parse(msg.toString());
                 
-                JsonObject newJson = new JsonObject();
-                newJson.add("message", jsonMessage.get("speech"));
-                arr.add(newJson);
+//                JsonObject newJson = new JsonObject();
+                arr.add(jsonMessage.get("speech").getAsString());
             }
         } catch (AIServiceException ex) {
             logger.error(ex);

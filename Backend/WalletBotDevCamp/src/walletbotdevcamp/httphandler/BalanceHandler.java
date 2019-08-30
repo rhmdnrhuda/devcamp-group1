@@ -28,6 +28,6 @@ public class BalanceHandler extends SimpleHttpHandler {
         Map<String, String> params = queryToMap(fullRequestBody);
         
         double balance = new Database().getBalance(params.get("userid"));
-        return String.valueOf(balance);
+        return String.format("%.2f", balance);
     }
 }

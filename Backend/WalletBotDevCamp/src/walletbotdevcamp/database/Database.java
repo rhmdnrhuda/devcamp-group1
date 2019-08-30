@@ -5,10 +5,13 @@
  */
 package walletbotdevcamp.database;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import org.apache.log4j.Logger;
 
 /**
@@ -52,15 +55,63 @@ public class Database {
             logger.error(ex);
         } finally {
             DatabaseUtility util = new DatabaseUtility();
+            util.closeResultSet(rs);
             util.closePreparedStatement(ps);
             util.closeConnection(conn);
-            util.closeResultSet(rs);
         }
         logger.debug(query+", "+userId+" Result: "+totalBalance);
         return totalBalance;
     }
+    
+    public JsonArray getTransactions(String userId, Timestamp startDate, Timestamp endDate) {
+        JsonArray array = new JsonArray();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String query = 
+                "SELECT * FROM "+tableName+" WHERE userid = ? "
+                + " AND Timestamp >= ?"
+                + " AND Timestamp <= ?"
+                + " ORDER BY Timestamp DESC";
+        
+        final String[] paramNames = {"Category", "Amount", "Type", "Timestamp", "Note"};
+        try {
+            Class.forName(dbDriver).newInstance();
+            conn = DriverManager.getConnection(dbUrl,dbUser,dbPass);  
+            ps = conn.prepareStatement(query);
+            
+            ps.setObject(1, userId);
+            ps.setObject(2, startDate);
+            ps.setObject(3, endDate);
+            
+            rs = ps.executeQuery();
+            
+            while(rs.next()) {
+                JsonObject obj = new JsonObject();
+                for (String key: paramNames) {
+                    try {
+                        int nom = Integer.parseInt(rs.getString(key));
+                        obj.addProperty(key, nom);
+                    } catch(Exception ex) {
+                        obj.addProperty(key, rs.getString(key));
+                    }
+                }
+                array.add(obj);
+            }
+            
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            DatabaseUtility util = new DatabaseUtility();
+            util.closeResultSet(rs);
+            util.closePreparedStatement(ps);
+            util.closeConnection(conn);
+        }
+        logger.debug(query+" === "+array.toString());
+        return array;
+    }
 
-    public String createQuery(String recordKeys, String recordValues, String recordPairs) {
+    public String createQuery(String recordKeys, String recordValues) {
         return "INSERT INTO " + tableName
                 + " ("+recordKeys+") VALUES"
                 + " ("+recordValues+")";
