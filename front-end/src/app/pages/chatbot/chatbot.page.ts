@@ -42,12 +42,12 @@ export class ChatbotPage implements OnInit {
       message: chat.message,
       imageUrl: chat.imageUrl
     });
+    this.scrollToBottom();
     this.chatbotService.sendChat(chat).subscribe(res => {
       JSON.parse(res).forEach(msg => {
         this.addBotChat(msg);
       });
     });
-    this.scrollToBottom();
   }
   addBotChat(message){
     this.chats.push(new Chat('Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
@@ -72,7 +72,9 @@ export class ChatbotPage implements OnInit {
   }
 
   scrollToBottom(){
-    this.content.scrollToBottom(300);
+    setTimeout(() => {
+      this.content.scrollToBottom();
+    });
   }
 
 }
