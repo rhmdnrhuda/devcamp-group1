@@ -4,6 +4,7 @@ import {
   RxSpeechRecognitionService,
   resultList,
 } from '@kamiazya/ngx-speech-recognition';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-input-field',
@@ -13,7 +14,7 @@ import {
 export class InputFieldComponent implements OnInit {
   chatMessage : any;
   @Output() addChat = new EventEmitter<Chat>();
-  constructor(public speechRecognition : RxSpeechRecognitionService) { }
+  constructor(public speechRecognition : RxSpeechRecognitionService, public androidPermissions : AndroidPermissions) { }
 
   ngOnInit() {}
 
@@ -24,6 +25,17 @@ export class InputFieldComponent implements OnInit {
     this.chatMessage = "";
   }
   listen() {
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO).then(
+      result => {
+        if(!result.hasPermission){
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO);
+        }
+      },
+      err => {
+        console.log(err);
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
+      }
+    );
     console.log('test');
     this.speechRecognition
       .listen()

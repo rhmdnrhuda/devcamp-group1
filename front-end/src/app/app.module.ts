@@ -18,6 +18,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import {
   SpeechRecognitionModule, RxSpeechRecognitionService
 } from '@kamiazya/ngx-speech-recognition';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +36,7 @@ import {
     HttpClientModule
   ],
   providers: [
+    AndroidPermissions,
     HTTP,
     SpeechRecognition,
     RxSpeechRecognitionService,

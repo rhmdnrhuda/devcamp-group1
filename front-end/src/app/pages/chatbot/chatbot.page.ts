@@ -4,6 +4,8 @@ import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+
 
 @Component({
   selector: 'app-chatbot',
@@ -18,7 +20,8 @@ export class ChatbotPage implements OnInit {
   constructor(
     public alertController: AlertController,
     private chatbotService : ChatbotService,
-    private storage : Storage) { }
+    private storage : Storage,
+    public androidPermissions : AndroidPermissions) { }
     public message = '';
   ngOnInit() {
     this.loadSavedChats();
@@ -29,6 +32,17 @@ export class ChatbotPage implements OnInit {
         this.firstTime();
       }
     });
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO).then(
+      result => {
+        if(!result.hasPermission){
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO);
+        }
+      },
+      err => {
+        console.log(err);
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
+      }
+    );
   }
   
   addChat(chat : Chat){
