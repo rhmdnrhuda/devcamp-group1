@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Riwayat Traksaksi</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="balance">
+    <ion-item>
+      <ion-label>Saldo Sekarang </ion-label>
+      <ion-label> {{balance | currency: 'Rp'}}</ion-label>
+    </ion-item>
+  </ion-card>
+  <ion-card class="range-time">
+    <ion-item>
+        <ion-label>Dari</ion-label>
+      <ion-item>
+        <ion-datetime value="1990-02-19" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+    </ion-item>
+    <ion-item>
+        <ion-label>Sampai</ion-label>
+      <ion-item>
+        <ion-datetime value="1990-02-20" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngFor="let item of data">
+    <ion-item class="date">
+      <ion-label>
+          <ion-datetime value="{{item.tanggal}}" displayFormat="DD MMMM YYYY"></ion-datetime>
+      </ion-label>
+      <ion-label class="total">{{item.total | currency: 'Rp'}}</ion-label>
+    </ion-item>
+    <div *ngFor="let data of item.data">
+        <ion-item >
+          <ion-datetime value="{{data.Timestamp}}" displayFormat="HH:mm" class="time"></ion-datetime>
+          <ion-label class="category"> 
+            {{data.Category}}
+            <ion-label class="note">
+              {{data.Note}}
+            </ion-label>
+          </ion-label>
+          <ion-label *ngIf="data.Type === 'Expense'" class="amount-expense">-{{data.Amount | currency: 'Rp'}}</ion-label>
+          <ion-label *ngIf="data.Type === 'Income'" class="amount-income">+{{data.Amount | currency: 'Rp'}}</ion-label>      
+        </ion-item>
+    </div>
+    
+  </ion-card>
+</ion-content>

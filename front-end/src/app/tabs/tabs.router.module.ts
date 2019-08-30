@@ -18,6 +18,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'riwayat',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../pages/riwayat/riwayat.module').then(m => m.RiwayatPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/chatbot',
         pathMatch: 'full'

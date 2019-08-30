@@ -6,7 +6,8 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
-  { path: 'chatbot', loadChildren: './pages/chatbot/chatbot.module#ChatbotPageModule' }
+  { path: 'chatbot', loadChildren: './pages/chatbot/chatbot.module#ChatbotPageModule' },
+  { path: 'riwayat', loadChildren: './pages/riwayat/riwayat.module#RiwayatPageModule' }
 ];
 @NgModule({
   imports: [
