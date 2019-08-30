@@ -6,6 +6,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ChatbotPage } from './chatbot.page';
+import { ChatContentComponent } from './chat-content/chat-content.component';
+import { InputFieldComponent } from './input-field/input-field.component';
 
 const routes: Routes = [
   {
@@ -21,6 +23,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ChatbotPage]
+  declarations: [ChatbotPage, ChatContentComponent, InputFieldComponent]
 })
 export class ChatbotPageModule {}
