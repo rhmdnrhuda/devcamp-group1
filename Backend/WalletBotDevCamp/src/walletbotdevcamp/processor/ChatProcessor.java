@@ -32,7 +32,19 @@ public class ChatProcessor {
 
     public String process() {
         DialogFlowHTTPS dialogflow = new DialogFlowHTTPS(this.sessionIdentifier);
-        return dialogflow.submitQueryAI(message).toString();
+        
+        String[] parsed = message.split(" ");
+        
+        String fullString = "";
+        
+        for (String p : parsed) {
+            if (p.matches(".*\\d.*")) {
+                fullString += " " + p.replaceAll("[^0-9.]", "");
+            } else {
+                fullString += " " + p;
+            }
+        }
+        return dialogflow.submitQueryAI(fullString).toString();
     }
             
 }

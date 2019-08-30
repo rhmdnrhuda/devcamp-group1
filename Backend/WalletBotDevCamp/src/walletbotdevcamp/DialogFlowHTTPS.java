@@ -37,6 +37,8 @@ public class DialogFlowHTTPS {
     private String sessionId = "";
     private String clientKey = "f790581ea3fc4d96b05548c56aec14dc";
     private AIDataService dataService = null;
+    private final String ALL_EXPENSES = "tagihan,belanja,hiburan,makanan";
+    private final String ALL_INCOMES = "gaji,hadiah,penjualan,tabungan";
     
     public DialogFlowHTTPS(String sessionId) {
         this.sessionId = sessionId;
@@ -51,7 +53,6 @@ public class DialogFlowHTTPS {
     }
     
     private void processInsert(HashMap<String, JsonElement> params) {
-        System.out.println(params.toString());
         if (params.size() < 1) {return;}    // should have at least 1 params
         
         String recordKeys = "userid,";     // for insert 
@@ -62,20 +63,15 @@ public class DialogFlowHTTPS {
             String key = entry.getKey();
             String val = entry.getValue().getAsString();
             
-            recordKeys += key + ",";
-            if (key.equals("Timestamp")) {
-                
-                if (val.contains("T")) {
-                    String newVal = val.substring(0, 19).replaceAll("T", " ");
-                    recordValues += "\"" + newVal + "\",";
-                } else {
-                    recordValues += "NOW(),";
-                }
-                
-            } else {
-                recordValues += "\"" + val + "\",";
-            }
+            String[] res1 = putToQuery(key, val);
+            recordKeys += res1[0];
+            recordValues += res1[1];
             
+            if (key.equals("Category")) {
+                String[] res2 = putToQuery("Type", convertCategory(val));
+                recordKeys += res2[0];
+                recordValues += res2[1];
+            }
         }
         recordKeys = trimSuffix(recordKeys);
         recordValues = trimSuffix(recordValues);
@@ -83,6 +79,36 @@ public class DialogFlowHTTPS {
         Database db = new Database();
         String query = db.createQuery(recordKeys, recordValues);
         db.executeUpdate(query);
+    }
+
+    private String convertCategory(String val) {
+        if (ALL_EXPENSES.toLowerCase().contains(val.toLowerCase())) {
+            return "Expense";
+        } else if (ALL_INCOMES.toLowerCase().contains(val.toLowerCase())) {
+            return "Income";
+        } else {
+            return "Expense";
+        }
+    }
+    
+    private String[] putToQuery(String key, String val) {
+        String recordKeys = "";
+        String recordValues = "";
+        
+        recordKeys += key + ",";
+        if (key.equals("Timestamp")) {
+
+            if (val.contains("T")) {
+                String newVal = val.substring(0, 19).replaceAll("T", " ");
+                recordValues += "\"" + newVal + "\",";
+            } else {
+                recordValues += "NOW(),";
+            }
+
+        } else {
+            recordValues += "\"" + val + "\",";
+        }
+        return new String[] {recordKeys, recordValues};
     }
     
     public JsonArray submitQueryAI(String message, List<AIContext> initialContexts, Boolean resetContext, String eventName) {
