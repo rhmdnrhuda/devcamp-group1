@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { HTTP } from '@ionic-native/http/ngx';
 import { AlertController } from '@ionic/angular';
 import { map } from 'rxjs/operators';
+import { ChatbotService } from '../../services/chatbot.service';
+import { Storage } from '@ionic/storage';
+import { Chat } from '../../models/chat';
 
 @Component({
   selector: 'app-chatbot',
@@ -11,36 +14,50 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./chatbot.page.scss'],
 })
 
-export class ChatbotPage implements OnInit {
-  private baseUrl = "http://10.50.218.17:8000/";
-  deviceId : any;
-  balance : any;
+export class ChatbotPage implements OnInit {  
+  public chats : Chat[] = [];
 
   constructor(
-    private uniqueDeviceID : UniqueDeviceID,
-    private http : HttpClient,
-    public alertController: AlertController) { }
+    public alertController: AlertController,
+    private chatbotService : ChatbotService,
+    private storage : Storage) { }
 
   ngOnInit() {
-    this.deviceId = "123";
-    this.http.get(this.baseUrl + 'getBalance?userid=' + this.deviceId, {responseType: 'text'})
-      .subscribe(res => {
-        this.balance = res;
-        if(this.balance <= 0){
-          this.presentAlert();
-        }
-      });
-    // this.uniqueDeviceID.get()
-    //   .then((uuid: any) => {
-    //     this.deviceId = uuid;
-    //     console.log("device id : " + this.deviceId);
-    //     console.log(this.http.get(this.baseUrl+"getBalance?userid="+this.deviceId));
-    //   })
-    //   .catch((error: any) => {
-    //     this.deviceId = "error "+error;
-    //   });
+    this.loadSavedChats();
+    this.chatbotService.getBalance();
+    this.storage.get('firstTime').then((firstTime) => {
+      if(!firstTime){
+        this.storage.set('firstTime', true);
+        this.firstTime();
+      }else{
+        console.log('not first time');
+      }
+    });
   }
 
+  addChat(chat : Chat){
+    this.chats.push({
+      name: chat.name,
+      message: chat.message,
+      imageUrl: chat.imageUrl
+    });
+    this.chatbotService.sendChat(chat).subscribe(res => {
+      JSON.parse(res).forEach(msg => {
+        this.addBotChat(msg);
+      });
+    });
+  }
+  addBotChat(message){
+    this.chats.push(new Chat('Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
+  }
+  firstTime(){
+    this.addBotChat('Hai, ini percobaan pertamamu ya?');
+  }
+  loadSavedChats(){
+    this.storage.get('chats').then((chats) => {
+      this.chats = chats || [];
+    });
+  }
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Saldo Habis',

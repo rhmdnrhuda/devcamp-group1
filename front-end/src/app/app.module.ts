@@ -11,11 +11,12 @@ import { AppComponent } from './app.component';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HTTP } from '@ionic-native/http/ngx';
+import { IonicStorageModule } from '@ionic/storage';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot(), HttpClientModule],
   providers: [
     HTTP,
     HttpClient,
