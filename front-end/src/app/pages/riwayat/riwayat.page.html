@@ -1,13 +1,25 @@
 <ion-header>
-  <ion-toolbar class="nav-bar" color="#8FB77F">
-      <ion-button style="background-color: #236855" float-left [routerLink]="['']">
-          <ion-icon class="colors" name="arrow-back" color="light"></ion-icon>
+  <ion-toolbar class="nav-bar" color="#8FB77F" horizontal="center" vertical="center">
+      <ion-button float-left [routerLink]="['']">
+          <ion-icon class="colors" name="arrow-back"></ion-icon>
         </ion-button>
-    <ion-title class="title">Riwayat Traksaksi</ion-title>
+    <ion-title class="title" vertical="center" horizontal="center" style="margin-left: auto; margin-right:auto;">
+      <h5><b>RIWAYAT TRANSAKSI</b></h5>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-fab vertical="bottom" horizontal="end" class="stop" slot="fixed">
+        <ion-fab-button (click)="voice()">
+          <ion-icon name="microphone"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+    <ion-fab vertical="bottom" horizontal="end" class="stop" slot="fixed" *ngIf="speaking">
+        <ion-fab-button (click)="stopSpeech()">
+          <ion-icon name="square"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
   <ion-card class="balance">
     <ion-item>
       <ion-label>Saldo Sekarang </ion-label>

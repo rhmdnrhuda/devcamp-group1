@@ -5,7 +5,8 @@ import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 @Component({
   selector: 'app-chatbot',
@@ -22,9 +23,19 @@ export class ChatbotPage implements OnInit {
     public alertController: AlertController,
     private chatbotService : ChatbotService,
     private storage : Storage,
-    public androidPermissions : AndroidPermissions) { }
+    public androidPermissions : AndroidPermissions,
+    public route : ActivatedRoute,
+    private router : Router,
+    private tts : TextToSpeech) { }
     public message = '';
+    public speaking : boolean;
+    
   ngOnInit() {
+    this.route.params.subscribe(
+      params => {
+        this.scrollToBottom();
+      });
+    
     this.loadSavedChats();
     this.chatbotService.getBalance();
     this.storage.get('firstTime').then((firstTime) => {
@@ -46,7 +57,7 @@ export class ChatbotPage implements OnInit {
     );
   }
   
-  addChat(chat : Chat){``
+  addChat(chat : Chat){
     this.chats.push({
       name: chat.name,
       message: chat.message,
@@ -60,13 +71,33 @@ export class ChatbotPage implements OnInit {
       });
     });
   }
-  addBotChat(message){
+  addBotChat(message : string){
+    const askForReport = message.includes('getReport');
+    if(askForReport){
+      message = 'Saya akan menyiapkan laporannya sesaat lagi.';
+    }
     this.chats.push(new Chat('Wallet Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
     this.storage.set('chats', this.chats);
     this.scrollToBottom();
+    console.log('speak');
+    this.speaking = true;
+    this.tts.speak({
+      text: message,
+      locale: 'id-ID'
+    })
+      .then(
+        () => {this.speaking = false; })
+      .catch((reason: any) => console.log(reason));
+    if(askForReport){
+      this.router.navigate(['/riwayat', {speak : true}]);
+    }
+  }
+  stopSpeech(){
+    this.tts.speak('');
+    this.speaking=false;
   }
   firstTime(){
-    this.addBotChat('Hai, ini percobaan pertamamu ya?');
+    this.addBotChat('Hai, ini percobaan pertamamu ya?\n Untuk dapat mencatat transaksi dan saldo mu, mohon masukkan saldo awal dulu ya.\n Contoh: Saldo awalku 10000 rupiah.');
   }
   loadSavedChats(){
     this.storage.get('chats').then((chats) => {

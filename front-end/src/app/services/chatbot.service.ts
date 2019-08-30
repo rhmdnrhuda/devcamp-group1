@@ -27,7 +27,7 @@ export class ChatbotService {
       });
   }
   sendChat(chat : Chat){
-    const payload = new ApiResponse(chat.name, chat.message);
+    const payload = new ApiResponse(this.deviceId, chat.message);
     return this.http.post(this.baseUrl+'addTransaction', JSON.stringify(payload), {responseType: 'text'});
   }
 

@@ -19,6 +19,7 @@ import {
   SpeechRecognitionModule, RxSpeechRecognitionService
 } from '@kamiazya/ngx-speech-recognition';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
     SpeechRecognition,
     RxSpeechRecognitionService,
     Camera,
+    TextToSpeech,
     HttpClient,
     UniqueDeviceID,
     StatusBar,
