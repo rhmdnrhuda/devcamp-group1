@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 import { HttpClient } from '@angular/common/http';
 import { HTTP } from '@ionic-native/http/ngx';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonContent } from '@ionic/angular';
 import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
@@ -14,9 +14,10 @@ import { Chat } from '../../models/chat';
   styleUrls: ['./chatbot.page.scss'],
 })
 
-export class ChatbotPage implements OnInit {  
-  public chats : Chat[] = [];
+export class ChatbotPage implements OnInit { 
+  @ViewChild('content', {static: false}) private content: any;
 
+  public chats : Chat[] = [];
   constructor(
     public alertController: AlertController,
     private chatbotService : ChatbotService,
@@ -46,9 +47,11 @@ export class ChatbotPage implements OnInit {
         this.addBotChat(msg);
       });
     });
+    this.scrollToBottom();
   }
   addBotChat(message){
     this.chats.push(new Chat('Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
+    this.scrollToBottom();
   }
   firstTime(){
     this.addBotChat('Hai, ini percobaan pertamamu ya?');
@@ -66,6 +69,10 @@ export class ChatbotPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  scrollToBottom(){
+    this.content.scrollToBottom(300);
   }
 
 }
