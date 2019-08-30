@@ -39,7 +39,6 @@ export class InputFieldComponent implements OnInit {
         this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
       }
     );
-    console.log('test');
     this.speechRecognition
       .listen()
       .pipe(resultList)

@@ -18,6 +18,10 @@
       </app-chat-content>
     </ion-grid>
 </ion-content>
-
+<ion-fab>
+  <ion-fab-button (click)="stopSpeech()">
+    <ion-icon name="square"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 <app-input-field
 (addChat)="addChat($event)" ></app-input-field>
