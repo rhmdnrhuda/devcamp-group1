@@ -25,8 +25,7 @@ export class RiwayatPage implements OnInit, AfterViewInit {
 
   setFormatDate(dateTime){
     dateTime = new Date(dateTime);
-    dateTime = dateTime.toISOString().slice(0,10);
-    
+    dateTime = format(dateTime, "yyyy-MM-dd");
     return dateTime;
   }
 
