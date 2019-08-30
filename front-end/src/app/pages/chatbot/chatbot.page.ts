@@ -5,7 +5,7 @@ import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot',
@@ -22,9 +22,11 @@ export class ChatbotPage implements OnInit {
     public alertController: AlertController,
     private chatbotService : ChatbotService,
     private storage : Storage,
-    public androidPermissions : AndroidPermissions) { }
+    public androidPermissions : AndroidPermissions,
+    public route : ActivatedRoute) { }
     public message = '';
   ngOnInit() {
+    this.scrollToBottom();
     this.loadSavedChats();
     this.chatbotService.getBalance();
     this.storage.get('firstTime').then((firstTime) => {
