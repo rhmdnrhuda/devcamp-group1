@@ -32,6 +32,8 @@ export class ChatbotService {
   }
 
   getTransaction(startdate,enddate){
+    // console.log(startdate);
+    
     if(this.startDate != startdate || this.endDate != enddate){
       this.http.get(this.baseUrl + 'getTransactions?userid=' + this.deviceId+ '&startdate='+startdate+'&enddate='+enddate, {responseType: 'text'})
       .subscribe(res => {
