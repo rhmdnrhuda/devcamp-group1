@@ -107,7 +107,7 @@ public class Database {
             util.closePreparedStatement(ps);
             util.closeConnection(conn);
         }
-        logger.debug(query+" === "+array.toString());
+        logger.debug(query+","+userId+","+startDate+","+endDate+" === "+array.toString());
         return array;
     }
 
