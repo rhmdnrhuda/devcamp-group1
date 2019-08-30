@@ -9,8 +9,8 @@ import { compareAsc, format } from 'date-fns'
 })
 export class RiwayatPage implements OnInit, AfterViewInit {
   balance: Number;
-  startDate: any;
-  endDate: any;
+  startDate = Date();
+  endDate = Date();
 
   
   constructor(private chatbotService : ChatbotService) { 

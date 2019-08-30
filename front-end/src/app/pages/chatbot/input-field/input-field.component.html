@@ -2,7 +2,10 @@
   <div class="input-wrap">
     <ion-textarea #messageInput placeholder="Enter your message!" [(ngModel)]="chatMessage" (keyup.enter)="sendMessage()">
     </ion-textarea>
-    <ion-button (click)="listen()">
+    <ion-button (click)="listen()" *ngIf="isListening" class="listening">
+        <ion-icon name="microphone"></ion-icon>
+    </ion-button>
+    <ion-button (click)="listen()" *ngIf="isListening == false">
         <ion-icon name="microphone"></ion-icon>
     </ion-button>
     <ion-button clear icon-only item-right (click)="sendMessage()" class="button-send">
