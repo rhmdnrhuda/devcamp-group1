@@ -42,7 +42,9 @@ export class RiwayatPage implements OnInit, AfterViewInit {
       }
     });
   }
-
+  stopSpeech(){
+    this.tts.speak('');
+  }
   ngOnInit() {
     this.chatbotService.getBalance();
   }

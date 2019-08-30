@@ -28,6 +28,7 @@ export class ChatbotPage implements OnInit {
     private router : Router,
     private tts : TextToSpeech) { }
     public message = '';
+    public speaking : boolean;
     
   ngOnInit() {
     this.route.params.subscribe(
@@ -79,18 +80,20 @@ export class ChatbotPage implements OnInit {
     this.storage.set('chats', this.chats);
     this.scrollToBottom();
     console.log('speak');
+    this.speaking = true;
     this.tts.speak({
       text: message,
       locale: 'id-ID'
     })
-      .then(() => console.log('Success'))
+      .then(
+        () => this.speaking = false)
       .catch((reason: any) => console.log(reason));
     if(askForReport){
       this.router.navigate(['/riwayat', {speak : true}]);
     }
   }
   stopSpeech(){
-    this.tts.stop();
+    this.tts.speak('');
   }
   firstTime(){
     this.addBotChat('Hai, ini percobaan pertamamu ya?');
