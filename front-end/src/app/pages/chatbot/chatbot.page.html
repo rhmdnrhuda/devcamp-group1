@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title horizontal="center">
-      Wallet Bot
+      <b>Wallet Bot</b>
+      {{available}}
+      match : {{speech}}
     </ion-title>
-    <ion-button float-right [routerLink]="['/report']">
+    <ion-button vertical="center" float-right [routerLink]="['/report']">
       <ion-icon name="stats"></ion-icon>
     </ion-button>
   </ion-toolbar>
@@ -17,7 +19,8 @@
       imageUrl="{{chat.imageUrl}}">
       </app-chat-content>
     </ion-grid>
-    
+    <ion-button (click)="start()"></ion-button>
 </ion-content>
+
 <app-input-field
 (addChat)="addChat($event)" ></app-input-field>

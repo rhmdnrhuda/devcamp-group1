@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
+import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 
 @Component({
   selector: 'app-chatbot',
@@ -16,13 +17,14 @@ import { Chat } from '../../models/chat';
 
 export class ChatbotPage implements OnInit { 
   @ViewChild('content', {static: false}) private content: any;
-
+  public available : any;
   public chats : Chat[] = [];
   constructor(
     public alertController: AlertController,
     private chatbotService : ChatbotService,
-    private storage : Storage) { }
-
+    private storage : Storage,
+    private speechRecognition : SpeechRecognition) { }
+    public speech : any;
   ngOnInit() {
     this.loadSavedChats();
     this.chatbotService.getBalance();
@@ -30,12 +32,30 @@ export class ChatbotPage implements OnInit {
       if(!firstTime){
         this.storage.set('firstTime', true);
         this.firstTime();
-      }else{
-        console.log('not first time');
       }
     });
-  }
+    this.speechRecognition.isRecognitionAvailable()
+      .then( (available) => {
+        this.available = available;
+        console.log('test');
+        console.log(available);
+      });
+    this.speechRecognition.hasPermission()
+      .then((hasPermission : boolean) => {
+        if(!hasPermission){
+          this.speechRecognition.requestPermission()
+            .then(() => console.log('granted'), () => console.log('denied'));
+        }
+      });
 
+  }
+  startListening(){
+    this.speechRecognition.startListening()
+      .subscribe((matches : Array<string>) => {
+        console.log(matches);
+        this.speech = matches[0];
+      })
+  }
   addChat(chat : Chat){
     this.chats.push({
       name: chat.name,
@@ -50,7 +70,7 @@ export class ChatbotPage implements OnInit {
     });
   }
   addBotChat(message){
-    this.chats.push(new Chat('Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
+    this.chats.push(new Chat('Wallet Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
     this.scrollToBottom();
   }
   firstTime(){
