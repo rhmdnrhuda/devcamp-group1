@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
-import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 
 @Component({
   selector: 'app-chatbot',
@@ -22,8 +21,7 @@ export class ChatbotPage implements OnInit {
   constructor(
     public alertController: AlertController,
     private chatbotService : ChatbotService,
-    private storage : Storage,
-    private speechRecognition : SpeechRecognition) { }
+    private storage : Storage) { }
     public speech : any;
   ngOnInit() {
     this.loadSavedChats();
@@ -34,28 +32,8 @@ export class ChatbotPage implements OnInit {
         this.firstTime();
       }
     });
-    this.speechRecognition.isRecognitionAvailable()
-      .then( (available) => {
-        this.available = available;
-        console.log('test');
-        console.log(available);
-      });
-    this.speechRecognition.hasPermission()
-      .then((hasPermission : boolean) => {
-        if(!hasPermission){
-          this.speechRecognition.requestPermission()
-            .then(() => console.log('granted'), () => console.log('denied'));
-        }
-      });
-
   }
-  startListening(){
-    this.speechRecognition.startListening()
-      .subscribe((matches : Array<string>) => {
-        console.log(matches);
-        this.speech = matches[0];
-      })
-  }
+  
   addChat(chat : Chat){
     this.chats.push({
       name: chat.name,
