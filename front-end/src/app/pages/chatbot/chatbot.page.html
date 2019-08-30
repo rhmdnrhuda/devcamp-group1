@@ -1,7 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-title horizontal="center">
-      Device id = <span *ngIf="deviceId">{{deviceId}}</span>
+      <b>Wallet Bot</b>
+      {{available}}
+      match : {{speech}}
     </ion-title>
     <ion-button float-right [routerLink]="['/riwayat']">
       <ion-icon name="stats"></ion-icon>
@@ -10,14 +12,15 @@
 </ion-header>
 
 <ion-content #content>
-    <ion-grid>
+    <ion-grid (change)="scrollBottom()">
       <app-chat-content *ngFor="let chat of chats"
       name="{{chat.name}}" 
       message="{{chat.message}}" 
       imageUrl="{{chat.imageUrl}}">
       </app-chat-content>
     </ion-grid>
-    
+    <ion-button (click)="start()"></ion-button>
 </ion-content>
+
 <app-input-field
 (addChat)="addChat($event)" ></app-input-field>

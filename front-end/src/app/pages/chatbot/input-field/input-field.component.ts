@@ -14,7 +14,8 @@ export class InputFieldComponent implements OnInit {
   ngOnInit() {}
 
   sendMessage(){
-    const chat = new Chat('Anda', this.chatMessage, 'https://image.flaticon.com/icons/png/512/65/65508.png');
+    const imageUrl = 'https://prd-wret.s3-us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/styles/full_width/public/thumbnails/image/placeholder-profile_2_0.png'
+    const chat = new Chat('Anda', this.chatMessage, imageUrl);
     this.addChat.emit(chat);
     this.chatMessage = "";
   }
