@@ -2,8 +2,15 @@
       --ion-safe-area-top: 20px;
       --ion-safe-area-bottom: 22px;
       font-family: 'Courier New', Courier, monospace;
-    }.date{
-        background-color: aquamarine;
+    }.nav-bar{
+        color: #364B2E;
+        background-color: #8FB77F;
+    }.title{
+        padding-left: 10%;
+        padding-top: 10px;
+    }.session-header{
+        color: #D7E2E0;
+        --ion-background-color: #236855;
     }.amount-expense{
         color: red;
         text-align: right;
@@ -19,4 +26,24 @@
         size: 12px;
     }.total{
         text-align: right
+    }.item-datetime-disabled{
+      
+    }.ion-item ion-datetime{
+        position:relative !important;
+        width:100%;
+    }.icon-back{
+        color: #D7E2E0 !important;
+        --ion-background-color: #236855!important;
+    }ion-button{
+        --ion-background-color: #236855 !important;
     }
+
+    $colors: (
+    primary:    #D7E2E0,
+    secondary:  #32db64,
+    danger:     #f53d3d,
+    light:      #f4f4f4,
+    dark:       #222,
+    vibrant:    rebeccapurple,
+    bright:     #ffc125
+);
