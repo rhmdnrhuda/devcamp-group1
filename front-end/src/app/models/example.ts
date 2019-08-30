@@ -1,4 +1,4 @@
-class exampleModel{
+export class exampleModel{
     attribute1 : string;
     attribute2 : number;
 
@@ -6,5 +6,5 @@ class exampleModel{
         this.attribute1 = x;
         this.attribute2 = y;
     }
-    
+
 }
