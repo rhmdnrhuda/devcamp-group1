@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import org.apache.log4j.Logger;
 
 /**
@@ -88,12 +89,20 @@ public class Database {
             
             while(rs.next()) {
                 JsonObject obj = new JsonObject();
+                
                 for (String key: paramNames) {
-                    try {
-                        int nom = Integer.parseInt(rs.getString(key));
-                        obj.addProperty(key, nom);
-                    } catch(Exception ex) {
-                        obj.addProperty(key, rs.getString(key));
+                    if (key.equals("Timestamp")) {
+                        Timestamp ts = new Timestamp(rs.getTimestamp(key).getTime());
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        obj.addProperty(key, sdf.format(ts));
+                        
+                    } else {
+                        try {
+                            int nom = Integer.parseInt(rs.getString(key));
+                            obj.addProperty(key, nom);
+                        } catch(Exception ex) {
+                            obj.addProperty(key, rs.getString(key));
+                        }
                     }
                 }
                 array.add(obj);

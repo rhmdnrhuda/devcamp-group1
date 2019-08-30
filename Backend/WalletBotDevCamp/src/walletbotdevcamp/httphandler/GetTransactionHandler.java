@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,6 @@ import walletbotdevcamp.processor.ChatProcessor;
  * @author cifran
  */
 public class GetTransactionHandler extends SimpleHttpHandler {
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             
     @Override
     public String processRequest(int requestIdentifier, String fullRequestBody) {
@@ -40,6 +40,7 @@ public class GetTransactionHandler extends SimpleHttpHandler {
             String startDate = params.get("startdate");
             String endDate = params.get("enddate");
             
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date dateStartDate = sdf.parse(startDate);
             Date dateEndDate = sdf.parse(endDate);
             
@@ -93,6 +94,7 @@ public class GetTransactionHandler extends SimpleHttpHandler {
         if (records.size() > 0) {
             JsonObject dailyData = new JsonObject();
             dailyData.add("data", records);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", new Locale("in", "ID"));
             dailyData.addProperty("tanggal", sdf.format(current));
             dailyData.addProperty("total", getDailyTotal(records));
             return dailyData;
