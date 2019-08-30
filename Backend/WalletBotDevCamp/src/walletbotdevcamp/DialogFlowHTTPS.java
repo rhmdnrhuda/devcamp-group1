@@ -17,6 +17,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,15 +139,55 @@ public class DialogFlowHTTPS {
             switch(response.getResult().getAction()) {
                 case "insertRecord": 
                     processInsert(response.getResult().getParameters());
-//                case "registerBalance":
-//                    processRegister(response.getResult().getParameters());
             }
+            
             for (ResponseMessage msg : response.getResult().getFulfillment().getMessages()) {
+                
                 JsonParser parser = new JsonParser();
                 JsonObject jsonMessage = (JsonObject) parser.parse(msg.toString());
                 
-//                JsonObject newJson = new JsonObject();
-                arr.add(jsonMessage.get("speech").getAsString());
+                String msgString = jsonMessage.get("speech").getAsString();
+                
+                
+                if ("getReport".equals(response.getResult().getAction())) {
+                    
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                    msgString = msgString.replaceFirst("\\$dateTime.startDate", sdf.format(new Date()));
+//                    msgString = msgString.replaceFirst("\\$dateTime.endDate", sdf.format(new Date()));
+//                    
+//                    try {
+//                        String[] parsed = msgString.split("\\,");
+//                        String mmsgString = parsed[0].trim() + "," + parsed[1].trim().substring(0, 10) + "," + parsed[2].trim().substring(0, 10);
+//                        msgString = mmsgString;
+//                    } catch(Exception ex) {
+//                        logger.error(ex);
+//                    }
+
+
+                    Calendar c = Calendar.getInstance();   // this takes current date
+                    c.set(Calendar.DAY_OF_MONTH, 1);
+    
+                    String[] parsedMsg = msgString.split(",");
+                    String startDate = sdf.format(c.getTime());
+                    String endDate = sdf.format(new Date());
+                    try {
+                        if (parsedMsg.length >= 1) {
+                            String[] parsedDateTime = parsedMsg[1].split("/");
+
+                            if (parsedDateTime.length >= 1) {
+                                startDate = parsedDateTime[0];
+                            }
+                            if (parsedDateTime.length >= 2) {
+                                endDate = parsedDateTime[1];
+                            }
+                        }
+                    } catch(Exception ex) {
+                        logger.error(ex);
+                    }
+                    msgString = parsedMsg[0].trim() + "," + startDate.trim() + "," + endDate.trim();
+                }
+                
+                arr.add(msgString);
             }
         } catch (AIServiceException ex) {
             logger.error(ex);
