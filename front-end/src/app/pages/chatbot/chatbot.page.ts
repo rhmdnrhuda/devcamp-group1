@@ -86,7 +86,7 @@ export class ChatbotPage implements OnInit {
       locale: 'id-ID'
     })
       .then(
-        () => this.speaking = false)
+        () => {this.speaking = false; })
       .catch((reason: any) => console.log(reason));
     if(askForReport){
       this.router.navigate(['/riwayat', {speak : true}]);
@@ -94,9 +94,10 @@ export class ChatbotPage implements OnInit {
   }
   stopSpeech(){
     this.tts.speak('');
+    this.speaking=false;
   }
   firstTime(){
-    this.addBotChat('Hai, ini percobaan pertamamu ya?');
+    this.addBotChat('Hai, ini percobaan pertamamu ya?\n Untuk dapat mencatat transaksi dan saldo mu, mohon masukkan saldo awal dulu ya.\n Contoh: Saldo awalku 10000 rupiah.');
   }
   loadSavedChats(){
     this.storage.get('chats').then((chats) => {

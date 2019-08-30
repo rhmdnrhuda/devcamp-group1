@@ -6,8 +6,11 @@ ion-toolbar{
 ion-button{
   --background: var(--header-back);
   --color: var(--header-text);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.11);
+  border-radius: 5px;
   &.listening{
-    --background: red;
+    --background: var(--header-text);
+  --color: var(--header-back);
   }
 }
 
