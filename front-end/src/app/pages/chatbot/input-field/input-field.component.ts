@@ -13,6 +13,8 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 })
 export class InputFieldComponent implements OnInit {
   chatMessage : any;
+  public isListening = false;
+
   @Output() addChat = new EventEmitter<Chat>();
   constructor(public speechRecognition : RxSpeechRecognitionService, public androidPermissions : AndroidPermissions) { }
 
@@ -25,6 +27,7 @@ export class InputFieldComponent implements OnInit {
     this.chatMessage = "";
   }
   listen() {
+    this.isListening = true;
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO).then(
       result => {
         if(!result.hasPermission){
@@ -50,6 +53,7 @@ export class InputFieldComponent implements OnInit {
         },
         () => {
           this.sendMessage();
+          this.isListening = false;
         });
   }
 }

@@ -6,6 +6,9 @@ ion-toolbar{
 ion-button{
   --background: var(--header-back);
   --color: var(--header-text);
+  &.listening{
+    --background: red;
+  }
 }
 
 // frontend/src/app/chat/chat.page.scss

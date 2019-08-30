@@ -17,6 +17,7 @@ export class ChatbotPage implements OnInit {
   @ViewChild('content', {static: false}) private content: any;
   public available : any;
   public chats : Chat[] = [];
+  
   constructor(
     public alertController: AlertController,
     private chatbotService : ChatbotService,
@@ -45,12 +46,13 @@ export class ChatbotPage implements OnInit {
     );
   }
   
-  addChat(chat : Chat){
+  addChat(chat : Chat){``
     this.chats.push({
       name: chat.name,
       message: chat.message,
       imageUrl: chat.imageUrl
     });
+    this.storage.set('chats', this.chats);
     this.scrollToBottom();
     this.chatbotService.sendChat(chat).subscribe(res => {
       JSON.parse(res).forEach(msg => {
@@ -60,6 +62,7 @@ export class ChatbotPage implements OnInit {
   }
   addBotChat(message){
     this.chats.push(new Chat('Wallet Bot', message, 'https://image.flaticon.com/icons/png/512/65/65508.png'));
+    this.storage.set('chats', this.chats);
     this.scrollToBottom();
   }
   firstTime(){
