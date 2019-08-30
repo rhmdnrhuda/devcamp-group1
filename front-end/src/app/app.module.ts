@@ -15,11 +15,19 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import {
+  SpeechRecognitionModule, RxSpeechRecognitionService
+} from '@kamiazya/ngx-speech-recognition';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
+    SpeechRecognitionModule.withConfig({
+      lang: 'id-ID',
+      interimResults: true,
+      maxAlternatives: 10,
+    }),
     BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule, 
@@ -28,6 +36,8 @@ import { Camera } from '@ionic-native/camera/ngx';
   ],
   providers: [
     HTTP,
+    SpeechRecognition,
+    RxSpeechRecognitionService,
     Camera,
     HttpClient,
     UniqueDeviceID,

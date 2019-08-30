@@ -1,7 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
-import { HttpClient } from '@angular/common/http';
-import { HTTP } from '@ionic-native/http/ngx';
 import { AlertController, IonContent } from '@ionic/angular';
 import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
@@ -22,7 +19,7 @@ export class ChatbotPage implements OnInit {
     public alertController: AlertController,
     private chatbotService : ChatbotService,
     private storage : Storage) { }
-    public speech : any;
+    public message = '';
   ngOnInit() {
     this.loadSavedChats();
     this.chatbotService.getBalance();
