@@ -34,16 +34,8 @@
     }.icon-back{
         color: #D7E2E0 !important;
         --ion-background-color: #236855!important;
-    }ion-button{
-        --ion-background-color: #236855 !important;
     }
-
-    $colors: (
-    primary:    #D7E2E0,
-    secondary:  #32db64,
-    danger:     #f53d3d,
-    light:      #f4f4f4,
-    dark:       #222,
-    vibrant:    rebeccapurple,
-    bright:     #ffc125
-);
+    ion-button{
+        --background: var(--header-back);
+        --color: var(--header-text);
+    }
