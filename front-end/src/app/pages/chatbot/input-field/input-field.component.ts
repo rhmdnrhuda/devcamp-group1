@@ -1,5 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Chat } from '../../../models/chat';
+import {
+  RxSpeechRecognitionService,
+  resultList,
+} from '@kamiazya/ngx-speech-recognition';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-input-field',
@@ -9,7 +14,7 @@ import { Chat } from '../../../models/chat';
 export class InputFieldComponent implements OnInit {
   chatMessage : any;
   @Output() addChat = new EventEmitter<Chat>();
-  constructor() { }
+  constructor(public speechRecognition : RxSpeechRecognitionService, public androidPermissions : AndroidPermissions) { }
 
   ngOnInit() {}
 
@@ -19,5 +24,32 @@ export class InputFieldComponent implements OnInit {
     this.addChat.emit(chat);
     this.chatMessage = "";
   }
-  
+  listen() {
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO).then(
+      result => {
+        if(!result.hasPermission){
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO);
+        }
+      },
+      err => {
+        console.log(err);
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
+      }
+    );
+    console.log('test');
+    this.speechRecognition
+      .listen()
+      .pipe(resultList)
+      .subscribe(
+        (list: SpeechRecognitionResultList) => {
+          this.chatMessage = list.item(0).item(0).transcript;
+          console.log('RxComponent:onresult', this.chatMessage, list);
+        },
+        (error) => {
+          console.log('error: '+ error)
+        },
+        () => {
+          this.sendMessage();
+        });
+  }
 }

@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
-import { HttpClient } from '@angular/common/http';
-import { HTTP } from '@ionic-native/http/ngx';
 import { AlertController, IonContent } from '@ionic/angular';
 import { map } from 'rxjs/operators';
 import { ChatbotService } from '../../services/chatbot.service';
 import { Storage } from '@ionic/storage';
 import { Chat } from '../../models/chat';
-import { SpeechRecognition } from '@ionic-native/speech-recognition/ngx';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+
 
 @Component({
   selector: 'app-chatbot',
@@ -23,8 +21,8 @@ export class ChatbotPage implements OnInit {
     public alertController: AlertController,
     private chatbotService : ChatbotService,
     private storage : Storage,
-    private speechRecognition : SpeechRecognition) { }
-    public speech : any;
+    public androidPermissions : AndroidPermissions) { }
+    public message = '';
   ngOnInit() {
     this.loadSavedChats();
     this.chatbotService.getBalance();
@@ -34,28 +32,19 @@ export class ChatbotPage implements OnInit {
         this.firstTime();
       }
     });
-    this.speechRecognition.isRecognitionAvailable()
-      .then( (available) => {
-        this.available = available;
-        console.log('test');
-        console.log(available);
-      });
-    this.speechRecognition.hasPermission()
-      .then((hasPermission : boolean) => {
-        if(!hasPermission){
-          this.speechRecognition.requestPermission()
-            .then(() => console.log('granted'), () => console.log('denied'));
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO).then(
+      result => {
+        if(!result.hasPermission){
+          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO);
         }
-      });
-
+      },
+      err => {
+        console.log(err);
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.RECORD_AUDIO)
+      }
+    );
   }
-  startListening(){
-    this.speechRecognition.startListening()
-      .subscribe((matches : Array<string>) => {
-        console.log(matches);
-        this.speech = matches[0];
-      })
-  }
+  
   addChat(chat : Chat){
     this.chats.push({
       name: chat.name,
