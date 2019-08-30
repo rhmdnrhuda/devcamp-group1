@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package walletbotdevcamp.database.httphandler;
+package walletbotdevcamp.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author cifran
  */
-public class AddTransactionHandler extends SimpleHttpHandler  {
+public class GetTransactionHandler extends SimpleHttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {

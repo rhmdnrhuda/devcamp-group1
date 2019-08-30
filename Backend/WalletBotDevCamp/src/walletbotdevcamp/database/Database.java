@@ -23,10 +23,6 @@ public class Database {
     private final String dbPass = "devcamp2019";
     private final String dbDriver = "com.mysql.jdbc.Driver";
     
-    public void insertTransaction() {
-        
-    }
-    
     public double getBalance(String userId) {
         double totalBalance = 0;
         
@@ -62,5 +58,30 @@ public class Database {
         }
         logger.debug(query+", "+userId+" Result: "+totalBalance);
         return totalBalance;
+    }
+
+    public String createQuery(String recordKeys, String recordValues, String recordPairs) {
+        return "INSERT INTO " + tableName
+                + " ("+recordKeys+") VALUES"
+                + " ("+recordValues+")";
+    }
+
+    public void executeUpdate(String query) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = -1;
+        try {
+            Class.forName(dbDriver).newInstance();
+            conn = DriverManager.getConnection(dbUrl,dbUser,dbPass);  
+            ps = conn.prepareStatement(query);
+            result = ps.executeUpdate();
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            DatabaseUtility util = new DatabaseUtility();
+            util.closePreparedStatement(ps);
+            util.closeConnection(conn);
+        }
+        logger.debug(query+", Result: "+result);
     }
 }

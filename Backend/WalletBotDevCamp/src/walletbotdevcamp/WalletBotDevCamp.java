@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
-import walletbotdevcamp.database.httphandler.AddTransactionHandler;
-import walletbotdevcamp.database.httphandler.BalanceHandler;
-import walletbotdevcamp.database.httphandler.GetTransactionHandler;
+import walletbotdevcamp.httphandler.AddTransactionHandler;
+import walletbotdevcamp.httphandler.BalanceHandler;
+import walletbotdevcamp.httphandler.GetTransactionHandler;
 
 /**
  *
